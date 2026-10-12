@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as HeritageRouteImport } from './routes/heritage'
+import { Route as HotelBookingRouteImport } from './routes/hotel-booking'
 import { Route as HeritageIndexRouteImport } from './routes/heritage.index'
 import { Route as HeritageSlugRouteImport } from './routes/heritage.$slug'
 
@@ -30,6 +31,11 @@ const HeritageRoute = HeritageRouteImport.update({
   path: '/heritage',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HotelBookingRoute = HotelBookingRouteImport.update({
+  id: '/hotel-booking',
+  path: '/hotel-booking',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HeritageIndexRoute = HeritageIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -45,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/gallery': typeof GalleryRoute
   '/heritage': typeof HeritageRouteWithChildren
+  '/hotel-booking': typeof HotelBookingRoute
   '/heritage/$slug': typeof HeritageSlugRoute
   '/heritage/': typeof HeritageIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/gallery': typeof GalleryRoute
+  '/hotel-booking': typeof HotelBookingRoute
   '/heritage/$slug': typeof HeritageSlugRoute
   '/heritage': typeof HeritageIndexRoute
 }
@@ -59,19 +67,27 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/gallery': typeof GalleryRoute
   '/heritage': typeof HeritageRouteWithChildren
+  '/hotel-booking': typeof HotelBookingRoute
   '/heritage/$slug': typeof HeritageSlugRoute
   '/heritage/': typeof HeritageIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/gallery' | '/heritage' | '/heritage/$slug' | '/heritage/'
+  fullPaths:
+    | '/'
+    | '/gallery'
+    | '/heritage'
+    | '/hotel-booking'
+    | '/heritage/$slug'
+    | '/heritage/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/gallery' | '/heritage/$slug' | '/heritage'
+  to: '/' | '/gallery' | '/hotel-booking' | '/heritage/$slug' | '/heritage'
   id:
     | '__root__'
     | '/'
     | '/gallery'
     | '/heritage'
+    | '/hotel-booking'
     | '/heritage/$slug'
     | '/heritage/'
   fileRoutesById: FileRoutesById
@@ -80,6 +96,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GalleryRoute: typeof GalleryRoute
   HeritageRoute: typeof HeritageRouteWithChildren
+  HotelBookingRoute: typeof HotelBookingRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -103,6 +120,13 @@ declare module '@tanstack/react-router' {
       path: '/heritage'
       fullPath: '/heritage'
       preLoaderRoute: typeof HeritageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hotel-booking': {
+      id: '/hotel-booking'
+      path: '/hotel-booking'
+      fullPath: '/hotel-booking'
+      preLoaderRoute: typeof HotelBookingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/heritage/': {
@@ -140,6 +164,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GalleryRoute: GalleryRoute,
   HeritageRoute: HeritageRouteWithChildren,
+  HotelBookingRoute: HotelBookingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
