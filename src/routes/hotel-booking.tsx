@@ -236,7 +236,7 @@ function Booking() {
             </form>
             <aside className="booking-aside">
               <img
-                src={heritageSites[1].image}
+                src={heritageSites[1]?.image}
                 alt="Peaceful architecture at Meiji Jingū"
                 width={960}
                 height={640}
