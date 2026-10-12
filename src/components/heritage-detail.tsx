@@ -1,0 +1,9 @@
+import { Link } from '@tanstack/react-router';
+import { ArrowRight, ChevronRight, MapPin } from 'lucide-react';
+import { TokyoLayout } from './tokyo-layout';
+import { Button } from './ui/button';
+import { HeritageCard } from './heritage-card';
+import { heritageSites, type HeritageSite } from '@/lib/heritage';
+export function HeritageDetail({site}:{site:HeritageSite}) {
+ return <TokyoLayout><div className="site-container"><div className="breadcrumb"><Link to="/">Home</Link><ChevronRight size={12}/><Link to="/heritage">Heritage</Link><ChevronRight size={12}/><span>{site.name}</span></div><div className="page-intro"><div className="section-kicker">{site.category.toUpperCase()} · {site.japanese}</div><h1>{site.name}</h1><p className="flex items-center gap-2"><MapPin size={15}/>{site.district}, Tokyo</p></div><img className="detail-image" src={site.image} alt={site.name} width={960} height={640}/><div className="detail-layout"><article><h2>A place to remember</h2><p>{site.description}</p><h2 className="mt-8">The story through time</h2><p>{site.history}</p></article><aside><h3>Plan your visit</h3><dl><dt>HISTORIC MILESTONE</dt><dd>{site.year}</dd><dt>NEAREST STATION</dt><dd>{site.station}</dd><dt>DON’T MISS</dt><dd>{site.highlight}</dd></dl><p className="mt-7">{site.tip}</p><Button asChild variant="outline"><Link to="/hotel-booking">Find a place to stay <ArrowRight/></Link></Button></aside></div><section className="section border-t border-border"><div className="section-heading"><div><div className="section-kicker">KEEP EXPLORING</div><h2>Another chapter of Tokyo</h2></div><Link to="/heritage" className="text-primary text-xs flex items-center gap-2">All heritage sites <ArrowRight size={14}/></Link></div><div className="heritage-grid">{heritageSites.filter(s=>s.slug!==site.slug).slice(0,3).map(s=><HeritageCard key={s.slug} site={s}/>)}</div></section></div></TokyoLayout>;
+}
