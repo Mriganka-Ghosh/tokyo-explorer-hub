@@ -1,24 +1,129 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, MapPin, Landmark, Camera, BedDouble, Compass, Sparkles } from "lucide-react";
+import { TokyoLayout } from "@/components/tokyo-layout";
+import { Button } from "@/components/ui/button";
+import { HeritageCard } from "@/components/heritage-card";
+import { heritageSites } from "@/lib/heritage";
+import { tokyoMeta } from "@/lib/tokyo-meta";
+import hero from "@/assets/tokyo-hero.jpg";
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () =>
+    tokyoMeta(
+      "Tokyo — Old soul. New stories.",
+      "Discover Tokyo’s historic temples, tranquil shrines and timeless gardens. Explore eleven heritage sites and plan your stay.",
+    ),
+  component: Home,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Home() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <TokyoLayout>
+      <section className="hero">
+        <img
+          className="hero-image"
+          src={hero}
+          alt="Sensō-ji Temple and its five-story pagoda at twilight in Tokyo"
+          width={1920}
+          height={1024}
+          fetchPriority="high"
+        />
+        <div className="site-container hero-content">
+          <div className="eyebrow">
+            <span className="h-px w-6 bg-on-image" /> WELCOME TO JAPAN’S CAPITAL
+          </div>
+          <h1>
+            Tokyo<span className="text-primary">.</span>
+          </h1>
+          <p className="hero-subtitle">A city of timeless stories.</p>
+          <p className="hero-description">
+            Ancient temples. Quiet gardens. Living traditions.
+            <br />
+            Discover the soul of Tokyo, one extraordinary
+            <br className="hidden sm:block" /> place at a time.
+          </p>
+          <div className="hero-actions">
+            <Button asChild variant="hero">
+              <Link to="/heritage">
+                Explore Heritage <ArrowRight />
+              </Link>
+            </Button>
+            <Button asChild variant="glass">
+              <Link to="/hotel-booking">
+                <BedDouble /> Plan Your Stay
+              </Link>
+            </Button>
+          </div>
+        </div>
+        <span className="hero-kanji" lang="ja">
+          東京
+        </span>
+        <div className="hero-pagination" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+        <div className="hero-location">
+          <MapPin size={14} /> Sensō-ji Temple, Asakusa
+        </div>
+      </section>
+      <div className="facts-band">
+        <div className="site-container facts">
+          {[
+            { icon: Landmark, title: "Centuries of heritage", text: "Stories that shaped a city" },
+            {
+              icon: Compass,
+              title: "11 iconic destinations",
+              text: "A world waiting to be explored",
+            },
+            { icon: Camera, title: "Picture-perfect moments", text: "Beauty around every corner" },
+            {
+              icon: BedDouble,
+              title: "Your Tokyo, your stay",
+              text: "Find your home away from home",
+            },
+          ].map((f) => (
+            <div className="fact" key={f.title}>
+              <f.icon />
+              <div>
+                <strong>{f.title}</strong>
+                <span>{f.text}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <section className="section site-container">
+        <div className="section-heading">
+          <div>
+            <div className="section-kicker">THE HEART OF THE CITY</div>
+            <h2>Where the past lives on</h2>
+            <p>Meet the places that make Tokyo unforgettable.</p>
+          </div>
+          <Link to="/heritage" className="text-xs text-primary flex items-center gap-2">
+            View all heritage sites <ArrowRight size={14} />
+          </Link>
+        </div>
+        <div className="heritage-grid">
+          {heritageSites.slice(0, 3).map((site) => (
+            <HeritageCard site={site} key={site.slug} />
+          ))}
+        </div>
+      </section>
+      <section className="travel-band">
+        <div className="site-container travel-inner">
+          <div>
+            <div className="section-kicker flex items-center gap-2">
+              <Sparkles size={13} /> MAKE IT YOUR JOURNEY
+            </div>
+            <h2>A little planning. A lifetime of memories.</h2>
+            <p>Stay close to the places you’ll fall in love with.</p>
+          </div>
+          <Button asChild size="lg">
+            <Link to="/hotel-booking">
+              Plan Your Stay <ArrowRight />
+            </Link>
+          </Button>
+        </div>
+      </section>
+    </TokyoLayout>
   );
 }
