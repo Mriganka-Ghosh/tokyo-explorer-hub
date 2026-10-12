@@ -10,33 +10,76 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as HeritageRouteImport } from './routes/heritage'
+import { Route as HeritageIndexRouteImport } from './routes/heritage.index'
+import { Route as HeritageSlugRouteImport } from './routes/heritage.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HeritageRoute = HeritageRouteImport.update({
+  id: '/heritage',
+  path: '/heritage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HeritageIndexRoute = HeritageIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => HeritageRoute,
+} as any)
+const HeritageSlugRoute = HeritageSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => HeritageRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/gallery': typeof GalleryRoute
+  '/heritage': typeof HeritageRouteWithChildren
+  '/heritage/$slug': typeof HeritageSlugRoute
+  '/heritage/': typeof HeritageIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/gallery': typeof GalleryRoute
+  '/heritage/$slug': typeof HeritageSlugRoute
+  '/heritage': typeof HeritageIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/gallery': typeof GalleryRoute
+  '/heritage': typeof HeritageRouteWithChildren
+  '/heritage/$slug': typeof HeritageSlugRoute
+  '/heritage/': typeof HeritageIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/gallery' | '/heritage' | '/heritage/$slug' | '/heritage/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/gallery' | '/heritage/$slug' | '/heritage'
+  id:
+    | '__root__'
+    | '/'
+    | '/gallery'
+    | '/heritage'
+    | '/heritage/$slug'
+    | '/heritage/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GalleryRoute: typeof GalleryRoute
+  HeritageRoute: typeof HeritageRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +91,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/heritage': {
+      id: '/heritage'
+      path: '/heritage'
+      fullPath: '/heritage'
+      preLoaderRoute: typeof HeritageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/heritage/': {
+      id: '/heritage/'
+      path: '/'
+      fullPath: '/heritage/'
+      preLoaderRoute: typeof HeritageIndexRouteImport
+      parentRoute: typeof HeritageRoute
+    }
+    '/heritage/$slug': {
+      id: '/heritage/$slug'
+      path: '/$slug'
+      fullPath: '/heritage/$slug'
+      preLoaderRoute: typeof HeritageSlugRouteImport
+      parentRoute: typeof HeritageRoute
+    }
   }
 }
 
+interface HeritageRouteChildren {
+  HeritageSlugRoute: typeof HeritageSlugRoute
+  HeritageIndexRoute: typeof HeritageIndexRoute
+}
+
+const HeritageRouteChildren: HeritageRouteChildren = {
+  HeritageSlugRoute: HeritageSlugRoute,
+  HeritageIndexRoute: HeritageIndexRoute,
+}
+
+const HeritageRouteWithChildren = HeritageRoute._addFileChildren(
+  HeritageRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GalleryRoute: GalleryRoute,
+  HeritageRoute: HeritageRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
